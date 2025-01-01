@@ -1,0 +1,104 @@
+1422. Maximum Score After Splitting a String
+
+Given a string s of zeros and ones, return the maximum score after splitting the string into two non-empty substrings (i.e. left substring and right substring).
+
+The score after splitting a string is the number of zeros in the left substring plus the number of ones in the right substring
+
+**********************************************************************************************************************************************************************
+
+1. 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+class Solution {
+public:
+    int maxScore(string s) {
+        int n = s.length();
+
+        int result = INT_MIN;
+
+        for(int i = 0; i <= n-2; i++) {
+            // 0 to i -> zero_count
+            int zero_count = 0;
+            for(int j = 0; j <= i; j++) {
+                if(s[j] == '0') {
+                    zero_count++;
+                }                  
+            }
+
+            // i+1 to n-1 -> one_count
+            int one_count = 0;
+            for(int j = i+1; j < n; j++) {
+                if(s[j] == '1') {
+                    one_count++;
+                }                 
+            }
+
+            result = max(result, zero_count + one_count);
+        }
+
+        return result;
+    }
+};
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+class Solution {
+public:
+    int maxScore(string s) {
+        int n = s.length();
+        int result = INT_MIN;
+
+        int total_ones = count(begin(s), end(s), '1');  // 1st pass
+
+        int zeros = 0; // left
+        int ones  = 0; // left
+        // right_ones = total_ones - ones;
+
+        for(int i = 0; i <= n-2; i++) {
+            if(s[i] == '1') {
+                ones++;
+            } else {
+                zeros++;
+            }
+
+            int right_ones = total_ones - ones;
+
+            result = max(result, zeros + right_ones);
+        }
+        return result;
+    }
+};
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+class Solution {
+public:
+    int maxScore(string s) {
+        int n = s.length();
+        int score = INT_MIN;
+
+        int zeros = 0;
+        int ones  = 0;
+
+        for(int i = 0; i <= n-2; i++) {
+            if(s[i] == '1')
+                ones++;
+            else
+                zeros++;
+            
+            score = max(score, zeros - ones);
+        }
+        
+        if(s[n-1] == '1')
+            ones++;
+
+        return score + ones;
+    }
+};
