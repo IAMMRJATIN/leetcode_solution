@@ -1,0 +1,57 @@
+/*You are given a string s of lowercase English letters and a 2D integer array shifts where shifts[i] = [starti, endi, directioni]. For every i, shift the characters in s from the index starti to the index endi (inclusive) forward if directioni = 1, or shift the characters backward if directioni = 0.
+
+Shifting a character forward means replacing it with the next letter in the alphabet (wrapping around so that 'z' becomes 'a'). Similarly, shifting a character backward means replacing it with the previous letter in the alphabet (wrapping around so that 'a' becomes 'z').
+
+Return the final string after all such shifts to s are applied.*/
+
+***************************************************************************************************************************************************************************
+
+1.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+class Solution {
+public:
+    string shiftingLetters(string s, vector<vector<int>>& shifts) {
+        int n = s.length();
+
+        vector<int> diff(n, 0);
+
+        //step 1: Build the diff array
+
+        for(auto &query : shifts) {
+            int L   = query[0];
+            int R   = query[1];
+            int dir = query[2];
+            int x;
+
+            if(dir == 0) {
+                x = -1;
+            } else{
+                x = 1;
+            }
+            diff[L] += x;
+            if(R+1 < n){
+                diff[R+1] -= x;
+            }
+        }
+
+        //step 2 : Find cumulative sum to find the resultant change/shifts in the index i
+        for(int i = 1; i < n; i++) {
+            diff[i] += diff[i-1];
+        }
+
+        //Now apply the shifts / change
+        for(int i = 0; i < n; i++) {
+            int shift = diff[i] % 26; //wrap around
+
+            if(shift < 0) {
+                shift += 26; //wrap around
+            }
+
+            s[i] = (((s[i] - 'a') + shift) % 26) + 'a';
+        }
+
+        return s;
+    }
+};
